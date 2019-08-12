@@ -1,10 +1,13 @@
+package com.sunll;
+
+import com.sunll.lintcode.sorts.SortFuncs;
 import org.junit.Test;
 
 /**
  * compare all sort method cost the time.
  */
-public class SortSummaryTest {
-    SortSummary sort = new SortSummary();
+public class SortFuncsTest {
+    SortFuncs sort = new SortFuncs();
     double start;
     double end;
     int[] arr;
@@ -56,7 +59,7 @@ public class SortSummaryTest {
     @org.junit.Test
     public  void insertionSort() {
         startTime();
-        sort.insertionSort(arr);
+        sort.insertSort(arr);
         endTime();
         System.out.println("insertionSort:" + (end - start));
     }
@@ -80,7 +83,7 @@ public class SortSummaryTest {
     @org.junit.Test
     public void heatSort() {
         startTime();
-        sort.heatSort(arr);
+        sort.heapSort(arr);
         endTime();
         System.out.println("heatSort:" + (end - start));
     }
@@ -112,7 +115,7 @@ public class SortSummaryTest {
     @org.junit.Test
     public void countingRadixSort() {
         startTime();
-        sort.countingRadixSort(arr);
+        sort.countSort(arr);
         endTime();
         System.out.println("countingRadixSort:" + (end - start));
     }

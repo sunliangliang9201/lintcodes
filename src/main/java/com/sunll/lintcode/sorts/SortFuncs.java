@@ -1,4 +1,4 @@
-package com.sunll.lintcode.utils;
+package com.sunll.lintcode.sorts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
