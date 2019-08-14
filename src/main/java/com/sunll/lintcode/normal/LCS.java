@@ -1,5 +1,7 @@
 package com.sunll.lintcode.normal;
 
+import java.util.Arrays;
+
 /**
  * 最长公共子序列问题和最长公共字串问题
  * longest common sequence & longest common substring
@@ -14,7 +16,10 @@ public class LCS {
         String a = "abcdef";
         String b = "adbcddf";
 //        System.out.println(lcSubstring(a, b));
-        System.out.println(lcSequence(a, b));
+//        System.out.println(lcSequence(a, b));
+        int[] arr1 = new int[]{1,2,3,4,5,6,2};
+        int[] arr2 = new int[]{1,3,4,5,6,3,3,2,4};
+        System.out.println(Arrays.toString(lcSequence(arr1, arr2)));
     }
 
     /**
@@ -71,7 +76,7 @@ public class LCS {
      * @param b
      * @return
      */
-    private static String lcSequence(String a, String b) {
+    public static String lcSequence(String a, String b) {
         int[][] res = new int[a.length()+1][b.length()+1];
         int[][] flag = new int[a.length()+1][b.length()+1];//1 代表是由i-1,j-1来的； 2代表从上边来的； 3代表从左边来的
         for (int i = 0 ;i <= a.length(); i++){
@@ -103,5 +108,46 @@ public class LCS {
             }
         }
         return result.reverse().toString();
+    }
+
+    /**
+     * 重载一个方法，用来做数字数组的LCS
+     * @param arr1
+     * @param arr2
+     * @return
+     */
+    public static int[] lcSequence(int[] arr1, int[] arr2){
+        int[][] res = new int[arr1.length+1][arr2.length+1];
+        int[][] flag = new int[arr1.length+1][arr2.length+1];//1 代表是由i-1,j-1来的； 2代表从上边来的； 3代表从左边来的
+        for (int i = 0 ;i <= arr1.length; i++){
+            for (int j = 0; j <= arr2.length; j++){
+                if (i == 0 || j == 0){
+                    res[i][j] = 0;
+                }else if(arr1[i-1] == arr2[j-1]){
+                    res[i][j] = res[i-1][j-1] + 1;
+                    flag[i][j] = 1;
+                }else{
+                    res[i][j] = res[i-1][j] > res[i][j-1]? res[i-1][j]:res[i][j-1];
+                    flag[i][j] = res[i-1][j] > res[i][j-1]? 2:3;
+                }
+            }
+        }
+        //最长的长度肯定是res[a.length][b.length]了，现在需要把结果回溯出来,此时就需要另外一个flag数组了，因为我们要知道是从哪条线上增加到该节点的
+        int[] result = new int[res[arr1.length][arr2.length]];
+        int i = arr1.length;
+        int j = arr2.length;
+        int time = result.length-1;
+        while(i > 0 && j > 0){
+            if (flag[i][j] == 1){
+                result[time--] = arr1[i-1];
+                i--;
+                j--;
+            }else if(flag[i][j] == 2){
+                i--;
+            }else{
+                j--;
+            }
+        }
+        return result;
     }
 }
