@@ -109,7 +109,7 @@ public class ArrangeCombine {
     public static void arrange01(char[] chars, int start, int end){
         if(start==end) result.add(String.valueOf(chars));
         for(int i = start; i< end; i++){
-            if (isSwap(chars, start,i)){
+            if (isSwap(chars, start,i)){//这一步的判断很关键
                 swap(chars, start, i);
                 arrange01(chars, start+1, end);
                 swap(chars, start, i);
