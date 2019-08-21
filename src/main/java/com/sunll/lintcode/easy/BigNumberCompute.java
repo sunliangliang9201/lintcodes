@@ -13,13 +13,14 @@ import java.util.Map;
  * @version 1.0
  */
 public class BigNumberCompute {
-    public static void main(String[] args) {
-        String a = "123";
-        String b = "3959";
-        System.out.println(bignumAdd(a,b));
-        System.out.println(bignumSubtract(a,b));
-        System.out.println(bignummultiply(a,b));
-
+    public static void main(String[] args) throws Exception {
+        String a = "128";
+        String b = "30";
+//        System.out.println(bignumAdd(a,b));
+        //System.out.println(bignumSubtract(a,b));
+//        System.out.println(bignumMultiply(a,b));
+        b = "3";
+        System.out.println(bignumDivide(a,b));
     }
 
     /**
@@ -49,6 +50,13 @@ public class BigNumberCompute {
         return res.reverse().toString();
     }
 
+    /**
+     * 大数减法
+     * 思想：与大数加法类似，有略微的区别
+     * @param a
+     * @param b
+     * @return
+     */
     public static String bignumSubtract(String a, String b){
         StringBuilder res = new StringBuilder();
         String fuhao = "";
@@ -68,11 +76,16 @@ public class BigNumberCompute {
             int subtract = a.charAt(i) - b.charAt(i) + flag;
             if (subtract < 0){
                 flag = -1;
-                subtract = Math.abs(subtract);//负数变正数
+                subtract += 10;
             }else{
                 flag = 0;
             }
             res.append(subtract);
+        }
+        //把后面的0去掉，说白了就是把结果的前面的0去掉
+        int index = res.length()-1;
+        while(res.charAt(index) == '0'){
+            res.deleteCharAt(index--);
         }
         res.append(fuhao);
         return res.reverse().toString();
@@ -85,7 +98,7 @@ public class BigNumberCompute {
      * @param b
      * @return
      */
-    public static String bignummultiply(String a, String b){
+    public static String bignumMultiply(String a, String b){
         String res = "";
         for (int i = 0; i < b.length(); i++){
             String tmp = compute(a,b.charAt(i));//每次用一位去乘
@@ -123,8 +136,30 @@ public class BigNumberCompute {
      * @param b
      * @return
      */
-    public static String bignumDivide(String a, String b){
-
-        return null;
+    public static String bignumDivide(String a, String b) throws Exception {
+        if (a.length() < b.length() || (a.length() == b.length() && a.compareTo(b) < 0)) return "0";
+        String res = "";
+        while(a.length() > b.length() || (a.length() == b.length() && a.compareTo(b) >0)){
+            //接下来计算b每一轮需要补几个0
+            int cha = a.length() - b.length();
+            if (a.substring(0, b.length()).compareTo(b) < 0) cha--;
+            StringBuilder lingNums = new StringBuilder();
+            for (int i = 0; i < cha; i++){
+                lingNums.append("0");
+            }
+            //开始循环相减
+            int count = 0;
+            String tmp = "";
+            while(true){
+                tmp = bignumSubtract(a, b + lingNums.toString());
+                if (tmp.startsWith("-")) break;
+                a = tmp;
+                count++;
+                //Thread.sleep(2000);
+            }
+            //每轮的结果加起来比如注释中的40 + 2
+            res = bignumAdd(res, count + lingNums.toString());
+        }
+        return res;
     }
 }
