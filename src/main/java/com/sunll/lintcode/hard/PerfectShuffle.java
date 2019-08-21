@@ -21,6 +21,8 @@ public class PerfectShuffle {
 //        System.out.println(Arrays.toString(perfectShuffle01(arr)));
 //        perfectShuffle02(arr);
 //        System.out.println(Arrays.toString(arr));
+        perfectShuffle02(arr);
+        System.out.println(Arrays.toString(arr));
     }
 
     /**
@@ -47,20 +49,45 @@ public class PerfectShuffle {
         int n = arr.length/2;
         while(n>1){
             int m = 1, k = 0;
-            while((3*k -1) < 2*n){//计算环的个数,以及如果2 * n !=（3^k - 1）的情况的m的值
+            while((int)(Math.pow(3,k) -1) < 2*n){//计算环的个数,以及如果2 * n !=（3^k - 1）的情况的m的值
                 k++;
             }
-            m = (3*k-1)/2;
+            m = ((int)Math.pow(3,k)-1)/2;
             //如果发生了m<n的情况，那么就需要再走圈之前吧m到n的数据移动到后面去,循环左移，我们用三段反转
             move(arr, m-1, m, n-1);
             //开始走圈
-            for (int j = 0; j <k;j++){
-
+            for (int j = 0, index = 1; j <k;j++, index *= 3){
+                cycle(arr, index, m*2+1);
             }
+            n -= m;
+            start = m;
         }
     }
 
+    /**
+     * 三段反转
+     */
     public static void move(int[] arr, int start, int len, int end){
+        reverse(arr, start, end);
+        reverse(arr, end, end+len);
+        reverse(arr, start, end+len);
+    }
+    public static void reverse(int[] arr, int start, int end){
+        while(start<end){
+            int tmp = arr[start];
+            arr[start++] = arr[end];
+            arr[end--] = tmp;
+        }
+    }
 
+    /**
+     * 走圈
+     */
+    public static void cycle(int[] arr, int index, int mod){
+        for (int i = index*2; i != index; i = i*2 % mod){//这里是关键，i的变化就是上面那个通项公式，每次和start交换即可，start不用变了，最后一次就是环的上一个，直接落在start
+            int tmp = arr[index-1];
+            arr[index-1] = arr[i-1];
+            arr[i-1] = tmp;
+        }
     }
 }
