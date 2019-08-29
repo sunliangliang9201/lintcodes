@@ -101,3 +101,9 @@ if __name__ == '__main__':
     print code
     s2 = huffman.decode(code, root)
     print s2
+
+    '''
+    {'a': '01', 'c': '1000', 'b': '101', 'f': '11', 'o': '1001', 't': '00'}
+    01101100001101111111110000100101
+    abcabffffttoa
+    '''
