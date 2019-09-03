@@ -99,7 +99,7 @@ public class SortFuncsTest {
     @org.junit.Test
     public void quickSort() {
         startTime();
-        sort.quickSort(arr, 0, arr.length - 1);
+        sort.quickSort02(arr, 0, arr.length - 1);
         endTime();
         System.out.println("quickSort:" + (end - start));
     }

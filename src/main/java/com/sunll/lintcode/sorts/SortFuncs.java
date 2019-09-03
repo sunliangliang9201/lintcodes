@@ -31,8 +31,17 @@ public class SortFuncs {
         //mergeSort(arr, 0, arr.length -1);
         //countSort(arr);
         //bucketSort(arr);
-        radixSort(arr);
-        System.out.println(Arrays.toString(arr));
+        //radixSort(arr);
+
+        //关于快排的重复元素问题
+        int[] arr1 = new int[]{1,2,3,4,5,4,5,4,1,9,11};
+        int[] arr2 = new int[]{1,2,3,4,5,4,5,4,1,9,11};
+        //quickSort01(arr1, 0, arr.length-1);//处理重复元素有问题
+        quickSort02(arr1, 0 ,arr.length-1);//可以处理存在重复元素问题
+        quickSort03(arr2, 0 ,arr.length-1);//可以处理存在重复元素问题
+        //System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(arr1));
+        System.out.println(Arrays.toString(arr2));
     }
 
 
@@ -169,11 +178,11 @@ public class SortFuncs {
     }
 
     /**
-     * 快速排序
+     * 快速排序01 没有重复元素的情况，我们可以看出如果有重复元素的下面的代码就会进入死循环
      * 时间复杂度 O(nlogn) 空间复杂度O(1) 不稳定排序
      * @param arr
      */
-    public static void quickSort(int[] arr, int start, int end){
+    public static void quickSort01(int[] arr, int start, int end){
         if (start >= end){
             return;
         }else{
@@ -194,8 +203,71 @@ public class SortFuncs {
                 }
             }
             arr[i] = midNum;
-            quickSort(arr, start, i-1);
-            quickSort(arr, j+1, end);
+            quickSort01(arr, start, i-1);
+            quickSort01(arr, j+1, end);
+        }
+    }
+
+    /**
+     * 快速排序02 存在重复元素的情况
+     * 时间复杂度 O(nlogn) 空间复杂度O(1) 不稳定排序
+     * @param arr
+     */
+    public static void quickSort02(int[] arr, int start, int end){
+        if (start >= end){
+            return;
+        }else{
+            int midNum = arr[start];
+            int i = start;
+            int j = end;
+            while(j > i){
+                while(i < j && arr[j] >= midNum){
+                    j--;
+                }
+                arr[i] = arr[j];
+                while(i < j && arr[i] <= midNum){
+                    i++;
+                }
+                arr[j] = arr[i];
+            }
+            arr[i] = midNum;
+            quickSort02(arr, start, i-1);
+            quickSort02(arr, j+1, end);
+        }
+    }
+
+    /**
+     * 快速排序03 存在大量重复元素的情况下的优化，也就是用基准面将数据分为三部分，小于基准面，大于基准面，等于基准面，把等于基准面的那部分数据不进行下一次排序
+     * 这样就减少了无用排序
+     * 时间复杂度 O(nlogn) 空间复杂度O(1) 不稳定排序
+     * @param arr
+     */
+    public static void quickSort03(int[] arr, int start, int end){
+        if (start >= end){
+            return;
+        }else{
+            int midNum = arr[start];
+            int i = start;
+            int j = end;
+            int k = start;
+            while(j >= i){
+                if (arr[i] < midNum){
+                    int tmp = arr[i];
+                    arr[i] = arr[k];
+                    arr[k] = tmp;
+                    i++;
+                    k++;
+                }else if(arr[i] > midNum){
+                    int tmp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp;
+                    j--;
+                }else{
+                    i++;
+                }
+            }
+            quickSort03(arr, start, k);
+            quickSort03(arr, j+1, end);
         }
     }
 
