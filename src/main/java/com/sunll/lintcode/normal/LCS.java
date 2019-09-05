@@ -3,7 +3,7 @@ package com.sunll.lintcode.normal;
 import java.util.Arrays;
 
 /**
- * 最长公共子序列问题和最长公共字串问题
+ * 最长公共子序列问题和最长公共字串问题 （快手）
  * longest common sequence & longest common substring
  * 第一：最长公共字串指的是连续的，这种情况比较简单！直接用动态规划思想即可，动态规划的意思是每一步都得到最优值
  *  注意：最长公共子串解决方案中空间复杂度是O(n*m)的，可以通过优化变为O(1)，因为结果肯定在一条一条的斜对角线上，也就是说循环m+n次即可，如果再剪枝的话更快

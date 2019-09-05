@@ -2,6 +2,11 @@ package com.sunll.lintcode.easy;
 
 /**
  * <p>desc: 反转单向链表</p>
+ * 1.单向链表反转
+ * 2.判断链表是否是回文的a-b-c-c-b-a
+ * 3.判断链表是否成环
+ * 很不可思议的一件事：金山云2017年校招笔试题出了第三题，2019年社招第三面出了第一题，第四面出了第二题。
+ * 有点意思
  * @author sunliangliang 2019-08-21 09:11
  * @version 1.0
  */
@@ -41,6 +46,23 @@ public class ReverseLink {
         }
         return pre;
     }
+
+    /**
+     * 判断是否是回文的单向链表
+     * @param head
+     * @return
+     */
+    public static boolean isPalindromic(MyNode head){
+
+        return false;
+    }
+
+    public static boolean isCycle(MyNode head){
+
+        return false;
+    }
+
+
 
     static class MyNode{
         private int value;
