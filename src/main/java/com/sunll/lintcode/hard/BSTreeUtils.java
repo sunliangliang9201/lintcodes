@@ -8,6 +8,8 @@ import java.util.*;
  * 2.二叉树遍历（先中后层序遍历）？（普通二叉树）
  * 3.判断二叉树是否为对称的？（普通二叉树）(小米)
  * 4.二叉树的序列与反序列化方法？（普通二叉树）（快手）
+ * 5.查询两个节点的最近公共父节点？（搜狐）
+ * 6.返回某个节点的所有父节点，包含自己？（搜狐）
  *
  * @author sunliangliang 2019/5/29
  * @version 1.0
@@ -219,7 +221,52 @@ public class BSTreeUtils<T extends Comparable<? super T>> {
         return node;
     }
 
+    /**
+     * 5.二叉树中两个节点a, b，寻找两个节点的最近的公共父节点？
+     * 方法很多：我当时想出来了两种方法
+     * 第一种：用一个list存储a节点的所有父节点（包括自己），然后再去找b节点的父节点，从下到上，每次都去list找，如果存在的话那就是最近的公共父节点。
+     * 由于是普通的二叉树，所以查询复杂度是O(n)，而去list找是否存在则是一个O(n2)的，不过呢，如果通过一些手段可以降低时间复杂度。
+     * 第二种：仍然是递归的方法，从叶节点开始，如果发现该节点以下的树包含了a，b那么直接返回该节点，否则返回null，这样如果递归回溯的时候如果返回不为null的话则继续返回那个节点，如果是null则以当前
+     * 节点为树进行重复工作，但是这个过程是O(n2)的
+     * 第三种：大家通用的方法：跟我说的第二种非常非常像，只是充分利用了递归的思想，无非两种情况，如果分别在根结点的两侧找到的a和b，那么返回根结点，如果在一侧找到了，那么就返回非空的那一侧的节点
+     * 下面实现第三种方式。
+     */
+    public  Node LCA(T a, T b, Node cur){// 可以想想递归的牛逼了吧！！！！！
+        if (cur == null || cur.data.compareTo(a) == 0 || cur.data.compareTo(b) == 0) return cur;
+        Node left = LCA(a, b, cur.leftChild);
+        Node right = LCA(a, b, cur.rightChild);
+        if (left != null && right != null){
+            return cur;
+        }
+        return left != null? left: right;
+    }
 
+    /**
+     * 6.返回某节点的所有父节点，包含自己？
+     * 这个函数主要是为了实现以下第5题中第一种方法中的内容，毕竟这个题在面试时自己写了，而且没写好，经过面试官的提示、解释才搞明白。
+     */
+    private List<T> list = new ArrayList<>();
+    public Node getParents(T key, Node cur){
+        //第一步退出条件，非常关键！！！！！
+        if (cur == null) return cur;
+        if (cur.data.compareTo(key) == 0) {//如果发现了要找的节点就添加到list，并且返回
+            list.add((T)cur.data);
+            return cur;
+        }
+        //if (list.size() != 0) list.add((T)cur.data);
+        Node left = getParents(key, cur.leftChild);
+        if (left != null) {
+            list.add((T)cur.data);
+            return cur;
+        }
+        Node right = getParents(key, cur.rightChild);
+        if (right != null) {
+            list.add((T)cur.data);
+            return cur;
+        }
+        return cur;
+    }
+    //总结：使用递归：第一步要确定好退出条件，看看需要操作；第二步就是调用递归，对当前结果进行判断操作即可。
 
 
     public static void main(String[] args) {
@@ -239,24 +286,40 @@ public class BSTreeUtils<T extends Comparable<? super T>> {
 
 
         //创建一个普通的二叉树
+//        Node<Integer> node1 = new Node<>(1);
+//        Node<Integer> node2 = new Node<>(2);
+//        Node<Integer> node3 = new Node<>(2);
+//        Node<Integer> node4 = new Node<>(3);
+//        Node<Integer> node5 = new Node<>(3);
+//        Node<Integer> node6 = new Node<>(4);
+//        Node<Integer> node7 = new Node<>(4);
+//        node1.leftChild = node2;
+//        node1.rightChild = node3;
+//        node2.leftChild = node4;
+//        node2.rightChild = node6;
+//        node3.leftChild = node7;
+//        node3.rightChild = node5;
+//        //System.out.println(isSymmetrical(node1));
+//        //System.out.println(preSerialization(node1));
+//        String str = "1/2/3/#/#/4/#/#/2/4/#/#/3/#/#/";
+//        Node header = preDeserialization(str);
+//        System.out.println(header);
+
         Node<Integer> node1 = new Node<>(1);
         Node<Integer> node2 = new Node<>(2);
-        Node<Integer> node3 = new Node<>(2);
-        Node<Integer> node4 = new Node<>(3);
-        Node<Integer> node5 = new Node<>(3);
-        Node<Integer> node6 = new Node<>(4);
-        Node<Integer> node7 = new Node<>(4);
+        Node<Integer> node3 = new Node<>(3);
+        Node<Integer> node4 = new Node<>(4);
+        Node<Integer> node5 = new Node<>(5);
+        Node<Integer> node6 = new Node<>(6);
+        Node<Integer> node7 = new Node<>(7);
         node1.leftChild = node2;
         node1.rightChild = node3;
-        node2.leftChild = node4;
-        node2.rightChild = node6;
-        node3.leftChild = node7;
-        node3.rightChild = node5;
-        //System.out.println(isSymmetrical(node1));
-        //System.out.println(preSerialization(node1));
-        String str = "1/2/3/#/#/4/#/#/2/4/#/#/3/#/#/";
-        Node header = preDeserialization(str);
-        System.out.println(header);
-
+//        node2.leftChild = node4;
+//        node3.leftChild = node5;
+//        node3.rightChild = node6;
+//        node5.leftChild = node7;
+        //System.out.println(tree.LCA(2, 7, node1));
+        tree.getParents(2, node1);
+        System.out.println(tree.list);
     }
 }
